@@ -247,10 +247,10 @@ def main():
              'be updated on the destination.'
         )
     parser.add_argument(
-        '-x', '--exclude', nargs='+', dest='exclude', default='',
-        help='One or more directory or file names to be excluded ' + \
+        '-x', '--exclude', dest='exclude', action='append',
+        help='A directory or file name to be excluded ' + \
              'from the current operation. ' + \
-             'Items must be comma separated.'
+             'EXCLUDE can be repeated if needed. '
         )
     parser.add_argument(
         '--glob', action='store_true',
