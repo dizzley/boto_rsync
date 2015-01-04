@@ -247,6 +247,12 @@ def main():
              'be updated on the destination.'
         )
     parser.add_argument(
+        '-x', '--exclude', nargs='+', dest='exclude', default='',
+        help='One or more directory or file names to be excluded ' + \
+             'from the current operation. ' + \
+             'Items must be comma separated.'
+        )
+    parser.add_argument(
         '--glob', action='store_true',
         help='Interpret the tail end of SOURCE as a filename pattern and ' + \
              'filter transfers accordingly. Note: If globbing a local ' + \
@@ -326,6 +332,11 @@ def main():
         skip_dirkeys = args.skip_dirkeys
         ignore_empty = args.ignore_empty
         delete = args.delete
+        exclude = args.exclude
+        sys.stdout.write('@@@ EXCLUDE = \'')    # @todo remove
+        for item in exclude:
+            sys.stdout.write(item + ' ')
+        sys.stdout.write('\'\n')    # @todo remove
         no_op = args.no_op
         quiet = args.quiet
         debug = args.debug
@@ -333,6 +344,10 @@ def main():
         dest = args.DESTINATION
     except:
         sys.stdout.write('\nERROR: Improperly formatted arguments.\n\n')
+        sys.stdout.write('@@@ EXCLUDE = \'')    # @todo remove
+        for item in exclude:
+            sys.stdout.write(item + ' ')
+        sys.stdout.write('\'\n')    # @todo remove
         usage(parser)
     
     if (source.startswith('s3://') and dest.startswith('gs://') or
@@ -469,6 +484,7 @@ def main():
                 sys.stdout.write('\n')
             
             # "Walk" the directory and upload files
+            sys.stdout.write('@@@ Path = ' + path + '\n')    # @todo remove
             for root, dirs, files in os.walk(path):
                 if no_recurse:
                     if root != path:
